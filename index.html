@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Sanatana Dharma Q&A for Youth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Spectral:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --deep-red: #8B1538;
+            --gold: #C9A961;
+            --teal: #1B5E5E;
+            --cream: #FFF8E7;
+            --dark-brown: #3D2817;
+            --light-gold: #F4E8C1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spectral', serif;
+            background: linear-gradient(135deg, var(--cream), var(--light-gold));
+            color: var(--dark-brown);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--deep-red);
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            color: var(--teal);
+            font-style: italic;
+        }
+
+        .filters {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 90px;
+            z-index: 99;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filters::-webkit-scrollbar {
+            display: none;
+        }
+
+        .filter-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin-right: 10px;
+            border: 2px solid var(--gold);
+            background: white;
+            color: var(--dark-brown);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:active,
+        .filter-btn.active {
+            background: var(--deep-red);
+            border-color: var(--deep-red);
+            color: white;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .cover-card {
+            background: linear-gradient(135deg, var(--deep-red), var(--saffron));
+            color: white;
+            padding: 60px 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .cover-card h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .cover-card p {
+            font-size: 1.3rem;
+            margin: 8px 0;
+        }
+
+        .ornament {
+            font-size: 2.5rem;
+            margin: 15px 0;
+            opacity: 0.9;
+        }
+
+        .qa-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .qa-card:active {
+            transform: scale(0.98);
+        }
+
+        .qa-card.hidden {
+            display: none;
+        }
+
+        .category-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--saffron), #E67E22);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .question {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-red);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            padding-bottom: 12px;
+            border-bottom: 3px solid var(--gold);
+        }
+
+        .answer-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--teal);
+            margin: 20px 0 12px;
+        }
+
+        .answer-heading::before {
+            content: '◆';
+            color: var(--gold);
+            margin-right: 8px;
+        }
+
+        .answer-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--dark-brown);
+        }
+
+        .answer-text p {
+            margin-bottom: 16px;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--deep-red), var(--saffron));
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.2s;
+            z-index: 1000;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:active {
+            transform: scale(0.9);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--teal);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .cover-card h2 {
+                font-size: 2rem;
+            }
+
+            .question {
+                font-size: 1.3rem;
+            }
+
+            .answer-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Sanatana Dharma</h1>
+        <div class="subtitle">Questions from Youth, Answers from Wisdom</div>
+    </div>
+
+    <div class="filters" id="filters">
+        <button class="filter-btn active" onclick="filterCategory('all')">All</button>
+        <button class="filter-btn" onclick="filterCategory('Hinduism')">Hinduism</button>
+        <button class="filter-btn" onclick="filterCategory('God')">God</button>
+        <button class="filter-btn" onclick="filterCategory('Rituals')">Rituals</button>
+        <button class="filter-btn" onclick="filterCategory('Marriage')">Marriage</button>
+        <button class="filter-btn" onclick="filterCategory('Women')">Women</button>
+        <button class="filter-btn" onclick="filterCategory('Modern')">Modern</button>
+        <button class="filter-btn" onclick="filterCategory('Prayer')">Prayer</button>
+        <button class="filter-btn" onclick="filterCategory('Language')">Language</button>
+    </div>
+
+    <div class="content" id="content">
+        <div class="cover-card">
+            <div class="ornament">✦</div>
+            <h2>Sanatana Dharma</h2>
+            <p>Youth Questions</p>
+            <p>Timeless Wisdom</p>
+            <div class="ornament">✦</div>
+        </div>
+    </div>
+
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">↑</button>
+
+    <div class="footer">
+        A comprehensive guide exploring Hindu philosophy, traditions, and modern perspectives
+    </div>
+
+    <script>
+        const qaData = [
+            {
+                question: "I am confused. What is the difference between Hindu, Hinduism, Hindutva, Sanatana Dharma?",
+                category: "Hinduism",
+                answer: "Sanatana Dharma literally translates as 'eternal laws' of this universe. Imagine you are a passive observer of everything that is happening in the universe and diligently recording your thoughts as words. That correctly recorded compendium will be called as 'eternal laws' (example - you will see objects fall and will surmise there is a gravitational force; you will see people getting angry and will surmise there are emotions and one of them is anger etc). This is also called as Vedas - the body of Hindu/Sanatana Dharma core literature.\n\nSomewhere down the past thousand years, the word Hinduism became equivalent to Sanatana Dharma. Hindu is one who follows Hinduism. Alternately, a Hindu can also be called as Sanatani. Finally, Hindutva is that 'quality of being Hindu', although the word is deliberately misused and maligned to mean 'radical Hindu' which itself is an oxymoron. A Hindu is one who has belief in the validity of scriptures - Vedas, Upanishads, Puranas, Itihasas. A Sanatani/Hindu can never be a radical person (radical meaning someone who would convert, force others and/or plunder nature).\n\nRemember that although you can experience sun and sun-light as two different objects, there is no sun-light without sun and there cannot be a sun without sun-light. Hindutva is to understood like that. There is no Hindu without Hindutva."
+            },
+            {
+                question: "How is the Hindu God(s) different from Christian God/Holy Father or Islam's Allah?",
+                category: "God",
+                answer: "In Hinduism, Ishwara is the nearest equivalent to the word God. Ishwara is that principle that has created this universe, sustains it and dissolves it into itself. In our traditions, Ishwara is like the CEO of the company. He (or She or It!) delegates power to manage different aspects of this universe to different powers he holds within himself. He is called Brahma as a creator, Vishnu as a preserver and Shiva as a dissolver. He is also called as Indra, Varuna, Aditya, Agni, Vayu.\n\nIslam's Allah and Christian God are very different concepts than Ishwara. In Hinduism, everything can be called Ishwara - a stone, air, water, fire, your parent, a young baby, an old man, a tree, an insect, a bird, an animal...and inanimate objects like mountains, rivers, valleys. Not quite so in other religions. In Hinduism, there is no 'God' who will sit in judgement after your death and decide where you will go - heaven or hell. We have a very simple & practical idea - what you sow is what you get.\n\nFinally, Ishwara is neither a jealous or angry God. He neither differentiates between the 'believers' & 'non-believers'. He does not propagate the idea that humans are superior to rest of the other beings. In Ishwara's eyes everything is equal. This makes Ishwara a friend to all - not someone who needs to be feared or pleased."
+            },
+            {
+                question: "Why should I be a Hindu and not convert to Christianity or Islam?",
+                category: "Conversion",
+                answer: "What is your goal of converting away from Hinduism? Is it that you don't understand the subject, so you now want to change your major? Or is it that something in the other religions is attracting you? Have you fully evaluated the pros & cons?\n\nImportantly, have you made an honest attempt to learn about the subject - Hinduism first? What if, a few years later, you regret your decision? Would you not be blaming yourself first that you did not even attempt to learn about Hinduism and decided to convert into Christianity or Islam just by hearing what they promised?\n\nHinduism does not ask you to believe in anything, but invites you to verify everything. Hinduism helps you to live & let live happily."
+            },
+            {
+                question: "What's wrong in being an atheist if you are a good person?",
+                category: "Atheism",
+                answer: "The Merriam-Webster dictionary defines 'atheist' as 'someone who does not believe in the existence of God or God(s). Moreover, in this very definition, it is presumed that the atheist knows about God, which seems illogical and circular argument. How can you know or not know something without defining it first? Have you asked yourself what the definition of 'God' is?\n\nHinduism does not ask you to believe anything at all. Hinduism invites you to verify everything. In Hinduism, the 'equivalent' yet more appropriate word is 'asthika/na-asthika'. An 'asthika' is one who 'believes' in Vedas and 'nastika' is one who does not.\n\nBeing an atheist and a good person is much better than being an 'asthika and a bad person'. But again, do you know what is the definition of 'good or bad'? Is it an absolute definition or does it change with circumstances?\n\nIf you are indicating that you want to have good values and still want to be an atheist, Hinduism welcomes that very much. In fact, Hinduism tells you the common-sensical values that everyone must have to live and let live happily in this universe."
+            },
+            {
+                question: "If Ishwara (or God!) is everywhere why should I go to temples at all?",
+                category: "Hinduism",
+                answer: "Will you take a dip anywhere in a very powerful river like Ganga or will you look for bathing ghats where it is easier to take a dip? Similarly, while Ishwara is everywhere, we go to the temple because it aids in accelerating the process of attaining our goals - be it spiritual or material goals. A temple is a place where the idol has been consecrated using powerful mantras that helps us with what we want.\n\nYour like or dislike to go to a temple is irrelevant question. If you like you will go. If you dislike, you need to figure out another way of, euphemistically speaking 'taking a dip in the powerful Ganga, without the comfort of the bathing ghats'. The choice is yours - either take the easy, well proven way or find your own way through trial & error.\n\nIrrespective whether you go to temple or not, if you have a mindset to follow Vedas, you are a Hindu."
+            },
+            {
+                question: "What is the usefulness of rituals - like daily puja? They seem pointless and just a waste of time.",
+                category: "Rituals",
+                answer: "Would you dismiss the routine a football player or athlete follows to warm up before a game, regular exercise and training like weights, strength, running etc? Would you say that the warm ups, push-ups, planks, burpees for a martial arts expert are irrelevant? Would you say that having the right mindset of a winner is not relevant at all in any activity - sport, work, studies or even life?\n\nIf you answer no to at least one of the above, then you have understood the value of consistency and repetition. It then becomes easy to understand the purpose of rituals. A Hindu ritual is something that helps build a person's character. For example, if someone takes a vow to do a particular puja (say Vishnusahasranamam chanting) for a particular form of deity (say Krishna) daily for the next thirty days at 6AM everyday, then that simple ritual becomes the central theme that would govern the person's life - sleeping time gets regulated, bathing before chanting becomes a habit etc. Moreover, you become someone who can be trusted - first by your own self, because you are sticking to your words & promises made by you! Then over time, others will also be trusting you.\n\nNow if someone were to object to doing rituals for a deity and instead wishes to follow 'non-Hindu religious' rituals, Hinduism does not object to it. However, it helps to realize that the slokas and mantras that are used in the rituals are nothing but powerful capsules that give the power to the practitioner."
+            },
+            {
+                question: "Do festivals have meaning behind them?",
+                category: "Festivals",
+                answer: "In Sanatana Dharma, every festival is a celebration of some kind. There are festivals where we celebrate the symbolic victory of good over evil (like Deepavali). There are festivals where we celebrate the birth of great saints or Avataras (eg. Guru Purnima or Krishna Janmashtami). There are festivals where we celebrate seasonal changes (Sankranti, Chaturmasa, Margazhi Mahotsava, Vana Bhojana). There are festivals where we also celebrate harvesting seasons. There are festivals to celebrate certain astrological phenomena (eclipses, full moon, new moon).\n\nIn short, every festival will have a purpose and meaning behind them. What and how to celebrate the festival in usually in accordance to traditions followed by the respective communities, families."
+            },
+            {
+                question: "Hinduism seems a very patriarchal/male dominated religion. What place do women have in Hinduism?",
+                category: "Women",
+                answer: "Women are placed on a higher pedestal in Hinduism. They are to be protected and cherished. They are the bearers and transmitters of culture in a family. In the earlier days, majority of women worked inside the home, taking care of the family, animals and guests, while the male worked outside in agriculture, commerce, priesthood or soldier/police/administration and similar roles. This was a clear division of labor.\n\nSince the past 80-100 years, women have started working outside as well. The modern roles have become gender-agnostic. Hinduism does not place any restrictions on women doing any roles as long as their biology is able to support it.\n\nHowever, when it comes to spiritual domain, Hinduism has a simple rule. Majority of the rituals are primarily the responsibility of those set of individuals who are married. And within this set, the woman plays a supporting role while the man has the responsibility to perform the ritual. However, the scriptures are clear in terms of the benefits accrued - half of all the punya goes to the woman and the entire paapa goes to the performer if it is done wrongly. That is why a married woman is called as 'saha dharma chaarini' - meaning, one who will follow the dharma of the husband.\n\nFinally, Hinduism emphatically states that all beings are equal, and have the same inner Self, but are wrapped in different biological forms - animals, birds, trees, insects, humans, bacteria. Such a religion will never be able to agree the concept of superiority or inferiority based on sex of a person."
+            },
+            {
+                question: "What is the philosophy behind Hinduism that helps in environment protection & sustainability?",
+                category: "Hinduism",
+                answer: "The philosophy of Hinduism is Vasudaiva Kutumbakam, which means that the 'entire universe is one family' (kutumbakam) and the head of the family is Vasudeva. There are several suktas that praise the earth as 'Mother Earth'. Reciting these suktas and understanding the meaning behind them is one of the key aspects of psychological change that humans can bring about in their attitude towards how they treat the earth.\n\nAlso, there is a very popular daily sloka called 'samudravasane devi parvatstana mandali, vishnupatni namasthubhyam, paadasparsham kshamasvave' which is recited by hundreds of millions of Hindus daily before they place their feet on the ground, when they wake up. The last part of the sloka basically seeks forgiveness from Mother Earth for placing our feet on her.\n\nAs regards to sustainability: One of the active, living principles in Hinduism is ahimsa, which is implemented by eating plants instead of animals, EVEN when one has a choice to eat both. Animals consume plants and if we consume animals then, there is already a severe wastage of natural resources. However, if we also consume plants, then there is no such wastage. This does not mean one should not eat meat, but it only provides us guidance and recommendation that eating plants is not only good for health, but is also environment friendly."
+            },
+            {
+                question: "Why should we sit down and eat (instead of using dining tables)? Also why should we use our hands to eat?",
+                category: "Rituals",
+                answer: "There is no hard and fast rule that we should not use dining tables or use cutlery. Having said that, it becomes very practical to combine exercise like sitting down with a regular activity like eating.\n\nIf we assume that we are going to eat for about 20-30min, that is equivalent to have gotten moderate exercise to our lower body. And, if we end up eating with hands instead of spoons, the body movements that are necessary to eat food, will mimic certain pelvic/abdominal exercises, which are absolutely not possible if one were to eat on a table and/or use cutlery.\n\nAs regards to eating with hands instead of using cutlery: Ask yourself if you know in whose mouth(s) the spoon/fork you are using now has gone into? Ask the same question with respect to your hands. It is appalling to think that eating with cutlery is more hygienic when practical observation definitely does not show it."
+            },
+            {
+                question: "I like to eat meat. Am I still a Hindu? Also, what type of meat can I eat?",
+                category: "Food",
+                answer: "Hinduism does not condemn any food habits but there are clear guidelines as to what type of food is good for human mental development and what is not. If you like to eat meat, you can go ahead. We don't condemn meat but we ask you to reconsider your likes and dislikes. This is the process of 'culture' of the mind.\n\nFrom scriptural point of view, food is of three types, sattvic, rajasic & tamasic and sattvic foods are encouraged to cultivate the sensitivity in the mind. There are certain foods, meat, garlic, onion included - which are considered not-sattvic. We believe that all beings - including plants and animals are valuable for a cohesive existence in this universe and each plays a role in this grand scheme of things.\n\nHalal or Kosher certification is irrelevant in the context of this answer. If you still wish to eat meat, we recommend you don't go for any such certified meat, as they are not relevant to Hinduism and they come from Abrahamic religions."
+            },
+            {
+                question: "What is the concept of caste? Isn't discriminating against other humans terrible?",
+                category: "Hinduism",
+                answer: "The concept of caste is a Western concept brought to India by Portuguese and the Europeans tried to fit the Indian society through the lens of Western society. Today, after several hundred years, in India, the caste is determined by birth! And, people are discriminated against just because they are born in a particular community.\n\nAccording to sastras, we had division of people based on two categories: varna and jati. Varna category divides any human - not just Hindu, into one of the four categories: brahmana (learner, teacher), kshatriya (protector, administrator), vysya (trader, farmer), sudra (server to the first three). Even in corporates, we can see this differentiation. This division is based not on birth, but on the qualities of their mind (guna) and their natural inclination for the type of work (karma).\n\nJati category can mean a community into which the person was born. If one is born in the family of teachers, her jati will be teacher. If one is born in the family of cobbler, the jati will be a cobbler.\n\nHow is this division in terms of varna wrong? Isn't it plain observation and codification of human nature? How is the division in terms of jati wrong? If we call X as someone born in a family that does X - what is wrong in calling a spade a spade?"
+            },
+            {
+                question: "What is the relevance of Sanskrit language in modern times? Why can't we have mantras in English?",
+                category: "Language",
+                answer: "In the history of languages, Sanskrit holds the place as that which has permeated almost all Indian languages. If we pick any of the languages that are popular in India, including Tamil, it is impossible not to find Sanskrit language influence in it. It is like the mother's DNA has been reborn in the baby.\n\nThe popular word, sanskriti meaning 'culture' of a country, civilization comes from the word sanskrit. It is impossible to understand the Sanatana Dharma culture unless one interprets it as it is to be done using Sanskrit language. Several misconceptions and mistranslations will just vaporize if we understand the language.\n\nSanskrit also means 'well (sam) done (krit)', indicating that the language is 'perfect'. There is less ambiguity in understanding this language and some computer scientists claim it is very well suitable to write clear unambiguous code.\n\nMantras are special sounds with power embedded, chanted in Sanskrit. Unlike other languages, Sanskrit is a spoken language that has evolved from understanding how the human voice emanates. The meaning of the word 'mantra' basically means 'that which protects the person who chants'. There is meaning, sound and power to purify the chanter. For example, the popular mantra, Om Namah Sivaya embeds the entire Hindu philosophy and if one were to expound this mantra in English, it could take a few pages at least."
+            },
+            {
+                question: "Is dating before marriage allowed for a Hindu? And is pre-marital sex allowed as per Hinduism?",
+                category: "Marriage",
+                answer: "'Dating' can mean many things - exploring a connection, physical/emotional intimacy and a first step to a goal - a potential happy long term peaceful relationship together. Hinduism calls long term peaceful relationship together as marriage.\n\nIf the goal is to have a long term peaceful relationship together, dating is not the only option available. Neither is it necessary. Arranged marriages are proven to be more successful in terms of the sought goal. This is because marriages in Hinduism do not only provide the circumstances for achieving this worldly goal of physical/emotional intimacy, but also help the couple to achieve their other goals - security, wealth, desire and finally, freedom!\n\nIf there is no 'commitment' in the relationship from the very beginning, there is always a chance that it may break off leaving both parties upset and emotionally strung with negativity. If there is parental support added to this commitment, then there is a much stronger chance that the relationship will develop for mutual as well as societal benefit.\n\nCurrent 'dating' especially being in multiple relationships, either simultaneously or sequentially seems just a waste of precious time, financial resources and emotional bandwidth. Moreover physical intimacy (sex) can lead to a dependency and craving for more that can divert the person's attention from their original goals. Pre-marital sex is not approved of in Sanatana Dharma."
+            },
+            {
+                question: "Can I marry a non-Hindu? What do shastras say?",
+                category: "Marriage",
+                answer: "Shastras do not differentiate between 'Hindus' and 'non-Hindus' as they are eternal truths and guidelines to practically manage our lives in consonance with those natural eternal truths. However, shastras are clear about the marriage concept itself - it is a union of a biological male and a female for achieving the grandiose vision of four human goals.\n\nThe vision of Hindu marriage is significantly larger - Hindu sees the purpose of marriage from four goals of human life - dharma, artha, kaama, and moksha. Union of male and female follows a natural instinct leading to the fulfillment of a fundamental desire (for sex, progeny). The married life involves protection and security for both the partners by way of sharing and caring for each other. This is the artha - security goal.\n\nDuring marriage, the couple take a vow - sankalpa, that emphasizes on 'dharma' and 'praja' - righteous living and good progeny. Finally, moksha is simply total freedom from suffering. This is a mindset that we need to develop. Married life provides the environment to removing our wrong notions, sharpens our intellect, makes us realize what is truly worth.\n\nIn this concept, one can marry a non-Hindu as long as the couple understand the concept of marriage and the grandiose vision in which marriage forms an essential step. If both the parties agree and work towards the larger goal of mutual growth towards ultimate freedom, we can marry non-Hindu.\n\nHaving said this, it is obviously very easy from adaptation perspective if both belong to similar cultural backgrounds, traditions."
+            },
+            {
+                question: "What does Hinduism say about non-binary (neither male nor female)? Is there a third gender?",
+                category: "Modern",
+                answer: "According to Hinduism, any species is broadly divided into male and female nature only, as defined by their biology. This is also validated by science today.\n\nHowever, there are exceptions when a person is classified as 'third nature' (tritiya prakriti). These exceptions are not rules. The Sanskrit dictionary defines the origin of such people as 'when the seeds of both male & female are equally present'. There are certain scriptures that discuss social status of this set of individuals with respect to inheritance etc.\n\nIn language, this 'third nature' is presented as someone without the typical male characteristics of strength, valor etc. (na-pumsak, literally meaning, 'not having male characteristics')"
+            },
+            {
+                question: "I don't want to be seen as an object or given away as a possession. Why should I say yes to Kanyadaan?",
+                category: "Marriage",
+                answer: "This is a valid question, yet unfortunately wrongly understood due to mistranslation in English. That is why it is extremely important to understand the context, and to understand the meaning behind the words used. Sanskrit and several vernacular languages have such a rich vocabulary that English does not have equivalent words to express the same idea.\n\nThe word 'daana' has to be understood in the context of marriage. 'Kanyadaana' has been wrongly propagated in English. When you donate a large sum of money without expecting anything in return - other than the basic expectation that the money will be used for the purposes it has been donated for, would that donation be interpreted by the donor as 'giving away an object/possession'? In this example, actually money is an object and is practically useless by itself. Still the donor does not see it as 'giving away an object/possession'. Why?\n\nSimilarly, when the parents do 'kanyadaana', it is to be understood that the parents are very well aware that what they are giving is not an inanimate object, but a living person capable of great wonders. They are also well aware of the love and affection that was poured for so long to bring this person to this stage. Yet, they are willingly 'offering/giving/handing over' their daughter to the bridegroom during the marriage ceremonies. There is no expectation from the bride's parents from the bridegroom other than the basic expectation that the bride and the bridegroom live their lives in accordance to the sastras.\n\nHow can anyone call this attitude as 'giving away an object/possession'? Kanya-daan is simply 'giving the unmarried girl in marriage without expecting anything in return'."
+            },
+            {
+                question: "Isn't abhishekam a waste of milk? We can feed the poor instead. Isn't Deepotsava a waste of oil?",
+                category: "Rituals",
+                answer: "Let us be fair before we raise this objection: aren't there several things that we do today that are wasteful? Here are couple of examples: Why order a pizza when one can eat approximately ten home-cooked meals for the same price? Why does one fly a business class when two can fly in economy class for the same price? Why buy more than three pairs of clothes when we can wash & use them regularly?\n\nLet us face it - none of us are truly idealistic. People who can afford to spend money should and must spend on worthwhile causes. This creates an ecosystem. Buying flowers or coconuts at a temple vendor is an economic service we do to the seller ecosystem. As our customs and rituals have traditionally said, we can take an offering - fruits, flowers, coconut to offer to a temple deity, we can help the temple vendors and also meet our personal goals of offering something to Ishwara.\n\nHowever if someone were to think that is a complete waste of money, then they should first ask themselves if they are entirely frugal. If they are, then they can wholeheartedly use that money to feed the poor or others to buy cooking oil. Else, it is a pretense and a hypocritical face mask they are wearing."
+            },
+            {
+                question: "Why should I pray? Prayers solving problems seems like just a random event. There seems to be no direct link.",
+                category: "Prayer",
+                answer: "Prayer is a solemn request for help or expression of thanks addressed to God or an object of worship. In Hinduism, prayer takes broadly three forms - praising the deity for the qualities they possess, and by extension, asking the deity to bestow those qualities in us. Yes, it is true that there is no direct link and we cannot see the results of the prayers all the time. It does seem like a random event, especially if one is looking for a one to one relationship between what you are asking for and the prayer.\n\nHowever, prayers should be viewed in a broader context: We see that there are many obstacles that come up in our way to achieve anything. Some of them are internal to us (like laziness), some are caused by people around us or by the forces of nature. No one has any control over these three obstacles, because most of them seem to be beyond our control. We can control only what we can control.\n\nIn Sanatana Dharma, we believe that prayers help us to reduce the impact of unknown forces that we cannot control. We are not embarrassed to ask for help from those deities/devas who are capable of helping us because we intuitively understand that we can control only what we can control.\n\nJust because we assume that a prayer has not resulted in the time we expect it to happen is illogical. Moreover, we don't even question if we have prayed with the right attitude, in the right way etc. All we can do is to do prayatna (our effort), give it kaala (time) and seek Ishwara's grace (daivam)."
+            },
+            {
+                question: "What is Feminism in terms of Sanatan Dharma?",
+                category: "Modern",
+                answer: "The dictionary definition of feminism is: belief in and advocacy of the political, economic, and social equality of the sexes. When one sincerely begins to question their very assumptions, the belief in feminism will just wither away. Nature has not created equals in any species or in any domain. Nature has created unique beings and has put them to interact with each other to grow mentally.\n\nSanatana Dharma emphasizes individual growth with interdependence. Unlike the individualistic Western society, our values are centered on 'culture'. Culture is a verb and not a noun. Culture as a verb means a constant purification of our mind - removing of wrong ideas and notions, illogical conclusions and managing the uncontrollable emotions.\n\nOur culture trains us to recognize the differences in the body, mind in the individuals yet realize the equality underneath all those beings. This is the ultimate goal of Sanatana Dharma. A society that recognizes the women as the torch-bearers of Hindu culture can never make them feel inferior. If it still happens, then clearly it must be called out. Just as a man cannot get pregnant, a woman cannot (need not) do certain tasks. This interdependent nature of man and woman must be recognized and acknowledged.\n\nUnlike some religions, an individual - male or female - has an agency in Sanatana Dharma. They are free to do what they want to do, as long as they understand the 'schema' of life in Sanatana Dharma and determine what they should be doing given their natural propensities."
+            }
+        ];
+
+        function renderCards() {
+            const content = document.getElementById('content');
+            const coverCard = content.querySelector('.cover-card');
+            
+            qaData.forEach(qa => {
+                const card = document.createElement('div');
+                card.className = 'qa-card';
+                card.dataset.category = qa.category;
+                
+                const paragraphs = qa.answer.split('\n\n').map(p => `<p>${p}</p>`).join('');
+                
+                card.innerHTML = `
+                    <span class="category-tag">${qa.category}</span>
+                    <div class="question">${qa.question}</div>
+                    <div class="answer-heading">Answer</div>
+                    <div class="answer-text">${paragraphs}</div>
+                `;
+                
+                content.appendChild(card);
+            });
+        }
+
+        function filterCategory(category) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter cards
+            const cards = document.querySelectorAll('.qa-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        // Initialize
+        renderCards();
+    </script>
+</body>
+</html>
