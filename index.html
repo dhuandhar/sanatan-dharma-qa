@@ -1,4 +1,15 @@
 <!DOCTYPE html>
+<!-- 
+    Sanatana Dharma Q&A Flipbook
+    Hosted at: https://dhuandhar.github.io/sanatan-dharma-qa/
+    
+    To update the live website:
+    1. Download this updated file
+    2. Rename it to 'index.html' 
+    3. Go to your GitHub repository
+    4. Upload and replace the old index.html file
+    5. Wait 2-3 minutes for changes to go live
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -298,16 +309,20 @@
         let currentPage = -1;
         let filteredData = [...qaData];
         let isFlipping = false;
+        const baseURL = 'https://dhuandhar.github.io/sanatan-dharma-qa/';
 
-        // Share to WhatsApp
+        // Share to WhatsApp with clickable link
         function shareToWhatsApp() {
             if (currentPage === -1) return; // Don't share cover page
             
             const qa = filteredData[currentPage];
             const questionNum = currentPage + 1;
             
-            // Create WhatsApp message with full Q&A content
-            const message = `🕉️ *Sanatana Dharma Q&A*\n\n*Question ${questionNum}:* ${qa.q}\n\n*Answer:*\n${qa.a}\n\n_Category: ${qa.c}_\n\n━━━━━━━━━━━━━━\n✨ Share wisdom with friends!`;
+            // Create shareable link with question number
+            const shareURL = baseURL + '?q=' + questionNum;
+            
+            // Create WhatsApp message with link and preview
+            const message = `🕉️ *Sanatana Dharma Q&A*\n\n*Question ${questionNum}:*\n${qa.q}\n\n_Click to read the answer:_\n${shareURL}\n\n━━━━━━━━━━━━━━\n✨ Category: ${qa.c}`;
             
             // Encode message for URL
             const encodedMessage = encodeURIComponent(message);
@@ -315,6 +330,19 @@
             // Open WhatsApp with pre-filled message
             const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
             window.open(whatsappURL, '_blank');
+        }
+
+        // Check URL for deep link on page load
+        function checkDeepLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const questionNum = urlParams.get('q');
+            
+            if (questionNum) {
+                const pageIndex = parseInt(questionNum) - 1;
+                if (pageIndex >= 0 && pageIndex < qaData.length) {
+                    currentPage = pageIndex;
+                }
+            }
         }
 
         // Initialize
@@ -433,7 +461,8 @@
             }
         }, {passive: true});
 
-        // Initialize app
+        // Initialize app and check for deep links
+        checkDeepLink();
         render();
     </script>
 </body>
